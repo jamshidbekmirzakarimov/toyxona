@@ -1,0 +1,1239 @@
+/* =========================================================================
+   To'yxona — global uslublar (oddiy zamonaviy CSS)
+   ========================================================================= */
+
+:root {
+  --primary: #6d28d9;
+  --primary-dark: #5b21b6;
+  --primary-soft: #ede9fe;
+  --bg: #f7f8fc;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e8eaf1;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+  --shadow: 0 4px 16px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 1rem;
+}
+
+/* --- Konteyner --- */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.page {
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+/* --- Navbar --- */
+.navbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge {
+  background: #ede9fe;
+  color: var(--primary-dark);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* --- Tugmalar --- */
+.btn {
+  display: inline-block;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: #f3f4f6;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+/* --- Kartochka --- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* --- Filtr / qidiruv paneli --- */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.filters input,
+.filters select {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.filters input {
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.filters select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.filters input:focus,
+.filters select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* --- Grid (to'yxonalar) --- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.venue-card {
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.venue-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.venue-thumb {
+  height: 150px;
+  background: #f3f4f6;
+}
+
+.venue-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.no-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.venue-body {
+  padding: 0.9rem 1rem 1.1rem;
+}
+
+.venue-body h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.price {
+  color: var(--primary-dark);
+  font-weight: 700;
+  margin: 0.4rem 0;
+}
+
+/* --- Formalar --- */
+.auth-card {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 1.75rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  gap: 0.3rem;
+}
+
+.form input {
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.form input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+/* --- Jadval --- */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+
+.table th {
+  background: #faf5ff;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Yordamchi klasslar --- */
+.muted {
+  color: var(--muted);
+}
+
+.error {
+  color: var(--danger);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.center-box {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.center-box h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Forma maydon xatosi --- */
+.field-error {
+  color: var(--danger);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.form input.input-error {
+  border-color: var(--danger);
+}
+
+.form input.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+/* --- To'yxona detal sahifasi --- */
+.vd-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.vd-header h1 {
+  margin: 0;
+}
+
+.vd-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.vd-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.vd-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: 76px;
+}
+
+@media (max-width: 860px) {
+  .vd-grid {
+    grid-template-columns: 1fr;
+  }
+  .vd-side {
+    position: static;
+  }
+}
+
+.vd-info {
+  padding: 1.1rem 1.25rem;
+}
+
+.vd-info h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+}
+
+.info-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.95rem;
+}
+
+/* --- Galereya --- */
+.gallery-main {
+  width: 100%;
+  height: 320px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.gallery-thumb {
+  width: 70px;
+  height: 54px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+
+.gallery-thumb.active {
+  border-color: var(--primary);
+}
+
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-empty {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  color: var(--muted);
+  border-radius: var(--radius);
+}
+
+/* --- Xizmatlar ro'yxati --- */
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.service-item {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.service-item img {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.menu-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  columns: 2;
+}
+
+/* --- Kalendar --- */
+.calendar {
+  padding: 1rem;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-weekday {
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 0.25rem 0;
+}
+
+.cal-cell {
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cal-cell.empty {
+  background: transparent;
+  cursor: default;
+}
+
+.cal-free {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.cal-free:hover {
+  background: #bbf7d0;
+}
+
+.cal-booked {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cal-past {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cal-selected {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.dot-free { background: #86efac; }
+.dot-booked { background: #fca5a5; }
+.dot-past { background: #d1d5db; }
+
+/* --- Bron formasi narx qutisi --- */
+.price-box {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
+
+.price-total {
+  font-weight: 700;
+  font-size: 1.02rem;
+  border-top: 1px solid #e9d5ff;
+  padding-top: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.price-advance {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* .form input umumiy uslubini checkbox'larda bekor qilamiz */
+.check-item input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 4px;
+  box-shadow: none;
+  flex: none;
+}
+
+/* --- Toast --- */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  z-index: 1000;
+}
+
+.toast {
+  min-width: 240px;
+  max-width: 360px;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  animation: toast-in 0.18s ease-out;
+}
+
+.toast-success {
+  background: #16a34a;
+}
+
+.toast-error {
+  background: var(--danger);
+}
+
+.toast-info {
+  background: var(--primary);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --- Status yorliqlari --- */
+.status-badge {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-past {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* --- Modal (ConfirmDialog) --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 1rem;
+}
+
+.modal {
+  max-width: 400px;
+  width: 100%;
+  padding: 1.5rem;
+}
+
+.modal h3 {
+  margin: 0 0 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+/* --- Tasdiqlanmagan status yorlig'i --- */
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* --- Sahifa sarlavhasi (chap: title, o'ng: tugmalar) --- */
+.page-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.page-head h1 {
+  margin: 0;
+}
+
+.page-head-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* --- To'yxona formasi --- */
+.venue-form {
+  max-width: 720px;
+}
+
+.venue-form input,
+.venue-form select,
+.venue-form textarea {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.venue-form textarea {
+  resize: vertical;
+}
+
+.venue-form input:focus,
+.venue-form select:focus,
+.venue-form textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.12);
+}
+
+.venue-form input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  box-shadow: none;
+}
+
+.venue-form input[type='file'] {
+  padding: 0.4rem;
+}
+
+.form-section {
+  margin-top: 1.5rem;
+}
+
+.form-section h3 {
+  font-size: 1rem;
+  margin: 0 0 0.6rem;
+}
+
+/* Dinamik massiv qatori (honanda/mashina/menyu) */
+.array-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.array-row input {
+  flex: 1;
+}
+
+.array-row .price-input {
+  flex: none;
+  max-width: 140px;
+}
+
+.row-remove {
+  border: none;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  height: 38px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.row-remove:hover {
+  background: #fecaca;
+}
+
+.existing-images {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.existing-images img {
+  width: 70px;
+  height: 54px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.file-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0.35rem 0 0;
+}
+
+/* --- Admin sub-navigatsiya (tablar) --- */
+.subnav {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+}
+
+.subnav-link {
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.subnav-link:hover {
+  color: var(--primary);
+}
+
+.subnav-link.active {
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary);
+}
+
+/* --- Jadval qatoridagi amal tugmalari --- */
+.row-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+/* --- Admin: forma + ro'yxat yonma-yon --- */
+.admin-split {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* --- Egani biriktirish select (modal ichida) --- */
+.assign-select {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* --- Spinner --- */
+.spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #e5e7eb;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+}
+
+.spinner-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- Skeleton (shimmer) --- */
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.3s ease infinite;
+  border-radius: 6px;
+}
+
+.skeleton-thumb {
+  height: 150px;
+  border-radius: 0;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin: 0.5rem 0;
+  width: 100%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+/* --- Mobil navbar toggle --- */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text);
+  line-height: 1;
+}
+
+@media (max-width: 720px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+    box-shadow: var(--shadow);
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-user {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+  }
+}
+
+/* ===========================================================================
+   PROFESSIONAL SAYQALLASH — yaxshilangan dizayn qatlami
+   =========================================================================== */
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  background:
+    radial-gradient(900px 480px at 100% -5%, #efeafe 0%, rgba(239, 234, 254, 0) 55%),
+    var(--bg);
+}
+
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
+
+.container {
+  max-width: 1140px;
+}
+
+/* --- Navbar (shisha effekti) --- */
+.navbar {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.nav-links a {
+  font-weight: 600;
+  color: var(--muted);
+  transition: color 0.15s ease;
+}
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+/* --- Tugmalar --- */
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+  transition: transform 0.06s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.15s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #7c3aed 0%, var(--primary) 100%);
+  box-shadow: 0 1px 2px rgba(91, 33, 182, 0.25), 0 6px 16px rgba(109, 40, 217, 0.18);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+
+.btn-ghost {
+  background: var(--surface);
+}
+
+.btn-ghost:hover {
+  background: #f4f4f8;
+  border-color: #d6d8e2;
+}
+
+/* --- Kartalar --- */
+.card {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* --- Forma inputlari (yumaloqroq) --- */
+.form input,
+.form select,
+.form textarea,
+.filters input,
+.filters select,
+.venue-form input,
+.venue-form select,
+.venue-form textarea,
+.assign-select {
+  border-radius: 10px;
+}
+
+/* --- Jadval (zebra + hover) --- */
+.table {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.table thead th {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.table tbody tr:nth-child(even) td {
+  background: #fafaff;
+}
+
+.table tbody tr:hover td {
+  background: #f3f0fc;
+}
+
+/* --- To'yxona kartasi --- */
+.venue-card {
+  border-radius: var(--radius);
+}
+
+.venue-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* --- Badge --- */
+.badge {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+/* --- Hero (bosh sahifa banneri) --- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 3.5rem 2rem;
+  margin-bottom: 1.75rem;
+  color: #fff;
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 45%, #c026d3 100%);
+  box-shadow: 0 14px 34px rgba(109, 40, 217, 0.28);
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(520px 240px at 88% 8%, rgba(255, 255, 255, 0.18), transparent 60%);
+  pointer-events: none;
+}
+
+.hero-title {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  max-width: 640px;
+}
+
+.hero-sub {
+  margin: 0;
+  font-size: 1.05rem;
+  opacity: 0.92;
+  max-width: 560px;
+}
+
+/* --- Footer --- */
+.footer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: 2rem;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.footer .brand {
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 2.5rem 1.25rem;
+  }
+}
+
+/* --- Sticky footer (footer doim pastda) --- */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page {
+  flex: 1 0 auto;
+}
