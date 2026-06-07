@@ -3,8 +3,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
 
 const { notFound, errorHandler } = require('./middleware/errorHandler');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
@@ -42,9 +44,29 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // ---------------------------------------------------------------------------
 //  Health check
 // ---------------------------------------------------------------------------
+// Ildiz (root) — Render health-check va brauzer uchun (404 bo'lmasligi uchun)
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: "To'yxona API ishlamoqda 🎉",
+    docs: '/api/docs',
+    health: '/api/health',
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'To\'yxona API ishlamoqda' });
 });
+
+// ---------------------------------------------------------------------------
+//  Swagger API hujjati: /api/docs (interaktiv), /api/docs.json (xom spec)
+// ---------------------------------------------------------------------------
+app.get('/api/docs.json', (req, res) => res.json(swaggerSpec));
+app.use(
+  '/api/docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { customSiteTitle: "To'yxona API Docs" })
+);
 
 // ---------------------------------------------------------------------------
 //  Route'lar

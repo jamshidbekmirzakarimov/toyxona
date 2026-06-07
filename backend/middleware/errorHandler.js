@@ -48,9 +48,10 @@ const errorHandler = (err, req, res, next) => {
     }
   }
 
-  // Konsolga log (request konteksti bilan; stack faqat development'da)
+  // Konsolga log (request konteksti bilan)
   console.error(`[XATO] ${statusCode} - ${req.method} ${req.originalUrl} - ${err.message}`);
-  if (!isProd) {
+  // Stack faqat KUTILMAGAN xatolarda (5xx yoki operatsion bo'lmagan) — 404/400 shovqin qilmaydi
+  if (!isProd && (statusCode >= 500 || !err.isOperational)) {
     console.error(err.stack);
   }
 

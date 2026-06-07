@@ -228,6 +228,8 @@ npm run preview  # build'ni lokal ko'rish
 
 Barcha endpointlar `/api` prefiksi bilan. Himoyalangan endpointlar `Authorization: Bearer <token>` talab qiladi.
 
+> 📘 **Interaktiv hujjat (Swagger):** server ishga tushgach **http://localhost:5000/api/docs** — barcha endpointlarni brauzerda sinab ko'rish mumkin. Xom OpenAPI spec: `/api/docs.json`.
+
 | Metod | Endpoint | Ruxsat | Tavsif |
 |-------|----------|--------|--------|
 | POST | `/auth/register` | ommaviy | Ro'yxatdan o'tish |

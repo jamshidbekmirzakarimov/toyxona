@@ -82,7 +82,7 @@ h1 {
   gap: 1rem;
 }
 
-.nav-links a:hover {
+.nav-links a:not(.btn):hover {
   color: var(--primary);
 }
 
@@ -1064,13 +1064,13 @@ h1, h2, h3 {
   letter-spacing: -0.4px;
 }
 
-.nav-links a {
+.nav-links a:not(.btn) {
   font-weight: 600;
   color: var(--muted);
   transition: color 0.15s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:not(.btn):hover {
   color: var(--primary);
 }
 
