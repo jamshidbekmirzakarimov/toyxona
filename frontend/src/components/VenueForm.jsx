@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from '../store/toastStore';
 import { TASHKENT_DISTRICTS } from '../utils/districts';
+import { imageUrl } from '../utils/imageUrl';
 
 const isNonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
 const phoneOk = (v) => /^\+?[0-9\s\-()]{7,20}$/.test(String(v || '').trim());
@@ -168,7 +169,7 @@ export default function VenueForm({ isEdit, initial, submitting, submitLabel, on
           <>
             <div className="existing-images">
               {existingImages.length > 0 ? (
-                existingImages.map((img) => <img key={img.id} src={img.image_url} alt="surat" />)
+                existingImages.map((img) => <img key={img.id} src={imageUrl(img.image_url)} alt="surat" />)
               ) : (
                 <span className="muted">Surat yo'q</span>
               )}

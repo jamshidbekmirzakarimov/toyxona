@@ -6,6 +6,7 @@ import ImageGallery from '../components/ImageGallery';
 import Calendar from '../components/Calendar';
 import BookingForm from '../components/BookingForm';
 import Spinner from '../components/Spinner';
+import { imageUrl } from '../utils/imageUrl';
 
 const fmt = (n) => Number(n || 0).toLocaleString('uz-UZ');
 
@@ -106,7 +107,7 @@ export default function VenueDetailPage() {
               <div className="service-list">
                 {venue.singers.map((s) => (
                   <div key={s.id} className="service-item">
-                    {s.image_url && <img src={s.image_url} alt={s.name} />}
+                    {s.image_url && <img src={imageUrl(s.image_url)} alt={s.name} loading="lazy" />}
                     <div>
                       <b>{s.name}</b>
                       <div className="muted">{fmt(s.price)} so'm</div>
@@ -123,7 +124,7 @@ export default function VenueDetailPage() {
               <div className="service-list">
                 {venue.cars.map((c) => (
                   <div key={c.id} className="service-item">
-                    {c.image_url && <img src={c.image_url} alt={c.brand} />}
+                    {c.image_url && <img src={imageUrl(c.image_url)} alt={c.brand} loading="lazy" />}
                     <div>
                       <b>{c.brand}</b>
                       <div className="muted">{fmt(c.price)} so'm</div>

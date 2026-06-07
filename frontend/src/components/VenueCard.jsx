@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { imageUrl } from '../utils/imageUrl';
 
 // ---------------------------------------------------------------------------
 //  VenueCard — bitta to'yxona kartochkasi (ro'yxatda qayta ishlatiladi)
@@ -10,7 +11,7 @@ export default function VenueCard({ venue }) {
     <Link to={`/venues/${venue.id}`} className="card venue-card">
       <div className="venue-thumb">
         {venue.thumbnail ? (
-          <img src={venue.thumbnail} alt={venue.name} />
+          <img src={imageUrl(venue.thumbnail)} alt={venue.name} loading="lazy" />
         ) : (
           <div className="no-img">Rasm yo'q</div>
         )}

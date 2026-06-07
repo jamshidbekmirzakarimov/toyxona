@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { imageUrl } from '../utils/imageUrl';
 
 // ---------------------------------------------------------------------------
 //  ImageGallery — asosiy rasm + thumbnail'lar
@@ -14,7 +15,7 @@ export default function ImageGallery({ images = [] }) {
   return (
     <div className="gallery">
       <div className="gallery-main">
-        <img src={images[active]?.image_url} alt="To'yxona surati" />
+        <img src={imageUrl(images[active]?.image_url)} alt="To'yxona surati" />
       </div>
 
       {images.length > 1 && (
@@ -26,7 +27,7 @@ export default function ImageGallery({ images = [] }) {
               className={`gallery-thumb ${i === active ? 'active' : ''}`}
               onClick={() => setActive(i)}
             >
-              <img src={img.image_url} alt={`surat ${i + 1}`} />
+              <img src={imageUrl(img.image_url)} alt={`surat ${i + 1}`} loading="lazy" />
             </button>
           ))}
         </div>

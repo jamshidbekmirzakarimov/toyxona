@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import Spinner from '../../components/Spinner';
+import { imageUrl } from '../../utils/imageUrl';
 
 // To'yxona statusi yorlig'i
 function VenueStatus({ status }) {
@@ -51,7 +52,7 @@ export default function OwnerVenuesPage() {
           {venues.map((v) => (
             <div key={v.id} className="card venue-card">
               <div className="venue-thumb">
-                {v.thumbnail ? <img src={v.thumbnail} alt={v.name} /> : <div className="no-img">Rasm yo'q</div>}
+                {v.thumbnail ? <img src={imageUrl(v.thumbnail)} alt={v.name} loading="lazy" /> : <div className="no-img">Rasm yo'q</div>}
               </div>
               <div className="venue-body">
                 <h3>{v.name}</h3>
