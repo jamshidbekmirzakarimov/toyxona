@@ -18,12 +18,26 @@ const app = express();
 // X-Powered-By header'ini ham o'chiradi (server texnologiyasini yashiradi).
 app.use(helmet());
 
-// CORS — frontend (Vite) bilan aloqa uchun. CLIENT_URL .env dan olinadi.
-// Diqqat: credentials:true bo'lganda origin ANIQ bo'lishi shart — '*' ishlamaydi,
-// shuning uchun fallback sifatida localhost (Vite porti) qiymatini beramiz.
+// CORS — bir nechta origin'ga ruxsat (lokal dev + deploy qilingan frontend).
+// Qo'shimcha origin'larni CLIENT_URL env orqali (vergul bilan ajratib) qo'shish mumkin.
+const defaultOrigins = [
+  'http://localhost:5173',
+  'https://toyxona-gules.vercel.app',
+];
+const envOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, '')) // bo'sh joy va oxirgi '/' ni olib tashlash
+  .filter(Boolean);
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin(origin, callback) {
+      // origin yo'q (curl, Swagger, server-to-server) yoki ruxsat etilgan ro'yxatda bo'lsa — ruxsat
+      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+      // aks holda CORS sarlavhalari qo'shilmaydi (brauzer bloklaydi), 500 ham bermaydi
+      return callback(null, false);
+    },
     credentials: true,
   })
 );
