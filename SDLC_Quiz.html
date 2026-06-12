@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDLC — Mustahkamlash Quizi</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --card2:#273449; --txt:#e2e8f0; --muted:#94a3b8;
+    --primary:#6366f1; --primary2:#818cf8; --ok:#22c55e; --okbg:#14331f; --bad:#ef4444; --badbg:#3a1717;
+    --border:#334155; --accent:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(160deg,#0f172a,#1e1b4b);color:var(--txt);
+       min-height:100vh;padding:24px 14px;line-height:1.55}
+  .wrap{max-width:760px;margin:0 auto}
+  header{text-align:center;margin-bottom:22px}
+  header h1{font-size:1.7rem;color:#fff;letter-spacing:.3px}
+  header p{color:var(--muted);margin-top:6px;font-size:.95rem}
+  .bar{height:9px;background:var(--card);border-radius:99px;overflow:hidden;margin:18px 0 6px}
+  .bar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--primary2));
+           border-radius:99px;transition:width .35s ease}
+  .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.85rem;margin-bottom:14px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 22px;
+        box-shadow:0 18px 40px rgba(0,0,0,.35)}
+  .tag{display:inline-block;font-size:.72rem;text-transform:uppercase;letter-spacing:.6px;color:var(--primary2);
+       background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);padding:3px 10px;border-radius:99px;margin-bottom:14px}
+  .q{font-size:1.18rem;font-weight:600;color:#fff;margin-bottom:18px}
+  .opts{display:flex;flex-direction:column;gap:11px}
+  .opt{display:flex;align-items:flex-start;gap:12px;background:var(--card2);border:1.5px solid var(--border);
+       border-radius:12px;padding:14px 16px;cursor:pointer;transition:.18s;font-size:1rem}
+  .opt:hover{border-color:var(--primary);transform:translateY(-1px)}
+  .opt .k{flex:0 0 26px;height:26px;border-radius:7px;background:#0f172a;border:1px solid var(--border);
+          display:grid;place-items:center;font-weight:700;font-size:.85rem;color:var(--primary2)}
+  .opt.correct{background:var(--okbg);border-color:var(--ok)}
+  .opt.correct .k{background:var(--ok);color:#06210f;border-color:var(--ok)}
+  .opt.wrong{background:var(--badbg);border-color:var(--bad)}
+  .opt.wrong .k{background:var(--bad);color:#2a0a0a;border-color:var(--bad)}
+  .opt.disabled{cursor:default;pointer-events:none;opacity:.96}
+  .explain{margin-top:16px;background:#0f172a;border-left:4px solid var(--accent);border-radius:8px;
+           padding:13px 15px;font-size:.94rem;color:#dbe4f0;display:none}
+  .explain.show{display:block;animation:fade .3s}
+  .explain b{color:var(--accent)}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+  .row{display:flex;justify-content:space-between;align-items:center;margin-top:20px;gap:12px}
+  .verdict{font-weight:700}
+  .verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+  button{font-family:inherit;font-size:1rem;font-weight:600;border:none;border-radius:11px;padding:12px 24px;
+         cursor:pointer;transition:.18s}
+  .next{background:linear-gradient(90deg,var(--primary),var(--primary2));color:#fff;margin-left:auto}
+  .next:hover{filter:brightness(1.08);transform:translateY(-1px)}
+  .next:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+  .ghost:hover{color:#fff;border-color:var(--primary)}
+  /* result */
+  .result{text-align:center;padding:34px 22px}
+  .score{font-size:3.4rem;font-weight:800;margin:8px 0}
+  .scoreLbl{color:var(--muted);font-size:1rem}
+  .emoji{font-size:3rem}
+  .msg{margin:16px 0 8px;font-size:1.15rem;color:#fff}
+  .review{text-align:left;margin-top:24px}
+  .review h3{color:var(--primary2);margin-bottom:12px;font-size:1rem;text-transform:uppercase;letter-spacing:.5px}
+  .ritem{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:9px;font-size:.92rem}
+  .ritem .ic{font-weight:700;margin-right:7px}
+  .ritem.r-ok{border-left:4px solid var(--ok)}
+  .ritem.r-bad{border-left:4px solid var(--bad)}
+  .ritem small{color:var(--muted);display:block;margin-top:4px}
+  .hidden{display:none}
+  footer{text-align:center;color:#475569;font-size:.8rem;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🎓 SDLC — Mustahkamlash Quizi</h1>
+    <p>Software Development Lifecycles · ma'ruzalar asosida · o'z-o'zini baholaydigan test</p>
+  </header>
+
+  <div id="quiz">
+    <div class="bar"><i id="bar"></i></div>
+    <div class="meta"><span id="counter">Savol 1 / 34</span><span id="liveScore">Ball: 0</span></div>
+
+    <div class="card">
+      <span class="tag" id="topic">Mavzu</span>
+      <div class="q" id="question">…</div>
+      <div class="opts" id="opts"></div>
+      <div class="explain" id="explain"></div>
+      <div class="row">
+        <span class="verdict" id="verdict"></span>
+        <button class="next" id="nextBtn" disabled>Keyingi →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resultScreen" class="card result hidden"></div>
+
+  <footer>Tugatgach sahifani yangilab qaytadan ishlashingiz mumkin. Savollar har safar aralashtiriladi.</footer>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ---------- A: Intro ----------
+  {t:"Kirish", q:"SDLC qisqartmasi nimani anglatadi?",
+   o:["Software Design and Logic Control","Software Development Life Cycle","System Development Logic Cycle","Structured Data Lifecycle"],
+   c:1, e:"SDLC — Software Development Life Cycle: dasturni rejalashtirishdan qo'llab-quvvatlashgacha bo'lgan tizimli jarayon."},
+  {t:"Kirish", q:"SDLC ning oltita bosqichi to'g'ri tartibda qaysi?",
+   o:["Dizayn → Talablar → Kodlash → Test → Deploy → Maintenance","Talablar → Dizayn → Amalga oshirish → Test → Deploy → Maintenance","Talablar → Kodlash → Dizayn → Deploy → Test → Maintenance","Rejalashtirish → Kodlash → Test → Dizayn → Deploy → Support"],
+   c:1, e:"To'g'ri tartib: Talablar tahlili → Tizim dizayni → Amalga oshirish → Testlash → Joriy etish → Qo'llab-quvvatlash."},
+  {t:"Kirish", q:"Statistik jihatdan dasturiy loyihalarning qanchasi maqsadiga erisha olmaydi?",
+   o:["~20%","~40%","~70%","~90%"],
+   c:2, e:"Taxminan 70% loyiha o'z maqsadlariga erisha olmaydi — asosan noaniq talablar va yomon rejalashtirish tufayli."},
+  {t:"Kirish", q:"Qo'llab-quvvatlash (maintenance) dasturiy ta'minotning umumiy xarajatining qancha qismini tashkil etadi?",
+   o:["10-20%","30-40%","60-70%","90% dan ortiq"],
+   c:2, e:"Maintenance umumiy xarajatning 60-70% ini tashkil etadi — chunki dastur 5-15+ yil yashaydi."},
+  {t:"Kirish", q:"Quyidagilardan qaysi biri qo'llab-quvvatlash TURI EMAS?",
+   o:["Korrektiv (corrective)","Adaptiv (adaptive)","Iterativ (iterative)","Profilaktik (preventive)"],
+   c:2, e:"Maintenance turlari: korrektiv, adaptiv, perfektiv, profilaktik. «Iterativ» — bu model turi, maintenance turi emas."},
+  {t:"Kirish", q:"Quibi loyihasi qaysi SDLC bosqichidagi xato tufayli muvaffaqiyatsiz bo'ldi?",
+   o:["Faqat kodlashdagi xato","Talablar tahlili — bozor ehtiyojini noto'g'ri tushunish","Faqat testlash yetishmovchiligi","Server infratuzilmasi yetarsizligi"],
+   c:1, e:"Quibi bozor ehtiyojini butunlay noto'g'ri tushundi (talablar tahlili) va pandemiyada mobil-only chiqdi (deploy). 6 oyda 1,75 mlrd $ yo'qotdi."},
+
+  // ---------- B: Requirements ----------
+  {t:"Talablar tahlili", q:"Tadqiqotlarga ko'ra dasturiy xatolarning qancha qismi talablar bosqichidan kelib chiqadi?",
+   o:["24%","44%","64%","84%"],
+   c:2, e:"Xatolarning ~64% talablar bosqichidan kelib chiqadi — noaniq talablar butun loyihani noto'g'ri poydevorga quradi."},
+  {t:"Talablar tahlili", q:"Xatoni tuzatish narxi bosqichlar bo'yicha qanday o'zgaradi (IBM)?",
+   o:["Har bosqichda bir xil qoladi","Keyingi bosqichlarda eksponensial oshadi","Keyingi bosqichlarda kamayadi","Faqat testlashda oshadi"],
+   c:1, e:"Talablarda 1x → dizaynda 5x → kodlashda 10x → testlashda 15x → deploydan keyin 30x. Erta tutgan arzon."},
+  {t:"Talablar tahlili", q:"«Sahifa 2 soniyada yuklanishi kerak» — bu qanday talab?",
+   o:["Funksional talab","Nofunksional talab","Doira (scope) bayoni","Use-case"],
+   c:1, e:"Bu nofunksional talab — tizim QANDAY ishlashini (unumdorlik) belgilaydi. Funksional talab tizim NIMA qilishini belgilaydi."},
+  {t:"Talablar tahlili", q:"«Tizim foydalanuvchini username/parol bilan autentifikatsiya qiladi» — bu qanday talab?",
+   o:["Funksional talab","Nofunksional talab","Risk","Cheklov (constraint)"],
+   c:0, e:"Bu funksional talab — tizimning aniq xatti-harakati/funksiyasi. Qolip: «Tizim ... qilishi shart (shall)»."},
+  {t:"Talablar tahlili", q:"Requirement GATHERING va ANALYSIS o'rtasidagi farq nima?",
+   o:["Ikkalasi bir xil narsa","Gathering — xom ma'lumot to'plash; Analysis — uni qayta ishlash/tartiblash","Gathering kodlashdan keyin bo'ladi","Analysis faqat testlash uchun"],
+   c:1, e:"Gathering — xom ma'lumot yig'ish (intervyu, so'rovnoma). Analysis — uni tartiblash, tasdiqlash, SRS yozish. Oshxona analogiyasi: masalliq olish va ovqat pishirish."},
+  {t:"Talablar tahlili", q:"Scope creep nima?",
+   o:["Loyiha byudjetining kamayishi","Ish boshlangach talablarning nazoratsiz kengayishi","Kod sifatining oshishi","Test qamrovining ortishi"],
+   c:1, e:"Scope creep — ish boshlangandan keyin talablarning nazoratsiz kengayishi; 3 oylik loyihani 9 oylikka aylantiradi."},
+  {t:"Talablar tahlili", q:"Talablar tahlili bosqichining ASOSIY natijasi nima?",
+   o:["Ishlaydigan kod","SRS (Software Requirements Specification) hujjati","Test hisoboti","Deploy skripti"],
+   c:1, e:"Asosiy natija — SRS hujjati: barcha funksional/nofunksional talablar; manfaatdor tomonlar va dasturchilar o'rtasidagi «shartnoma». Bular kod emas, hujjatlar."},
+  {t:"Talablar tahlili", q:"Rejalashtirish qaysi savollarga javob beradi?",
+   o:["QANDAY (dizayn va arxitektura)","QACHON va QANCHA (vaqt va xarajat)","Faqat KIM (jamoa)","Faqat QAYERDA (server)"],
+   c:1, e:"«Rejalashtirish QACHON va QANCHA degan savolga javob beradi, QANDAY emas». QANDAY — keyingi (dizayn) bosqichida."},
+
+  // ---------- C: XP & Kanban ----------
+  {t:"XP & Kanban", q:"Extreme Programming (XP) asosan nimaga e'tibor qaratadi?",
+   o:["Loyiha boshqaruvi va rollar","Texnik mukammallik va muhandislik amaliyotlari","Hujjatlashtirish","Marketing"],
+   c:1, e:"XP texnik mukammallikka (TDD, pair programming, CI, refaktoring) e'tibor qaratadi. Scrum esa loyiha boshqaruviga."},
+  {t:"XP & Kanban", q:"TDD siklining to'g'ri tartibi qaysi?",
+   o:["Green → Red → Refactor","Red → Green → Refactor","Refactor → Red → Green","Test → Deploy → Refactor"],
+   c:1, e:"TDD: RED (test yozib fail ko'rish) → GREEN (testni o'tkazadigan minimal kod) → REFACTOR (kodni yaxshilash)."},
+  {t:"XP & Kanban", q:"Pair programming'da «Navigator» ning vazifasi nima?",
+   o:["Kodni yozadi","Har qatorni ko'rib chiqadi, strategiyani o'ylaydi, xatolarni payqaydi","Faqat kuzatib turadi","Mijoz bilan gaplashadi"],
+   c:1, e:"Driver kod yozadi (taktika), Navigator esa har qatorni ko'rib chiqadi va strategiyani o'ylaydi. Rollar 15-30 daqiqada almashadi."},
+  {t:"XP & Kanban", q:"XP ning beshta qadriyatidan biri QAYSI EMAS?",
+   o:["Communication","Simplicity","Documentation","Courage"],
+   c:2, e:"XP qadriyatlari: Communication, Simplicity, Feedback, Courage, Respect. «Documentation» ular orasida yo'q (XP minimal hujjat tarafdori)."},
+  {t:"XP & Kanban", q:"Refactoring nima?",
+   o:["Yangi funksiya qo'shish","Tashqi xatti-harakatni o'zgartirmasdan kodning ichki tuzilishini yaxshilash","Xato tuzatish","Noldan qayta yozish"],
+   c:1, e:"Refactoring — tashqi xatti-harakatni O'ZGARTIRMASDAN ichki tuzilishni yaxshilash. Yangi funksiya/xato tuzatish EMAS."},
+  {t:"XP & Kanban", q:"Kanban qaysi tizimdan kelib chiqqan?",
+   o:["Microsoft Windows","Toyota ishlab chiqarish tizimi","NASA","IBM mainframe"],
+   c:1, e:"Kanban Toyota ishlab chiqarish tizimidan (1940-yillar oxiri, Taiichi Ohno) kelib chiqqan; 2000-yillarda dasturga moslashtirilgan."},
+  {t:"XP & Kanban", q:"WIP limit nimani cheklaydi?",
+   o:["Loyiha byudjetini","Bir vaqtda jarayonda bo'lgan vazifalar sonini","Jamoa a'zolari sonini","Kod qatorlari sonini"],
+   c:1, e:"WIP (Work In Progress) limit — bir vaqtda jarayonda bo'lishi mumkin bo'lgan vazifalar soni. Bu kontekst almashtirishni kamaytiradi."},
+  {t:"XP & Kanban", q:"Kanban «pull» tizimi nimani anglatadi?",
+   o:["Ish jamoa a'zolariga majburan beriladi","Jamoa a'zosi bo'shaganda ishni o'zi tortib oladi","Ish faqat menejer tomonidan taqsimlanadi","Barcha ish bir vaqtda boshlanadi"],
+   c:1, e:"Pull tizimida a'zo bo'shaganda ishni O'ZI tortib oladi (Just-In-Time). Push tizimida esa ish majburan beriladi (Waterfall)."},
+  {t:"XP & Kanban", q:"«Lead time» va «cycle time» farqi nima?",
+   o:["Bir xil narsa","Lead time — so'rovdan yetkazishgacha (kutish bilan); cycle time — ish boshlangandan tugagunigacha","Cycle time har doim uzunroq","Lead time faqat testlash vaqti"],
+   c:1, e:"Lead time = so'rov → yetkazish (kutish vaqtini ham qamrab oladi). Cycle time = ish boshlanishi → tugashi (faqat faol ish)."},
+
+  // ---------- D: DevOps / SAFe / Spiral ----------
+  {t:"Zamonaviy modellar", q:"DevOps asosan nimani birlashtiradi?",
+   o:["Dizayn va testlashni","Dasturiy ishlab chiqish (Dev) va IT operatsiyalarini (Ops)","Frontend va backendni","Marketing va sotuvni"],
+   c:1, e:"DevOps Dev (development) va Ops (operations)ni birlashtiradi — ishlab chiqish siklini qisqartirish va tez yetkazish uchun."},
+  {t:"Zamonaviy modellar", q:"«You build it, you run it» tamoyili nimani anglatadi?",
+   o:["Faqat menejer kodga javobgar","Kodni yozgan dasturchi uni ishlab chiqarishda ham qo'llab-quvvatlaydi","Kod yozilgach loyiha tugaydi","Operatsiyalar jamoasi alohida ishlaydi"],
+   c:1, e:"DevOps tamoyili: dasturchi o'z kodiga ishlab chiqarishda ham egalik qiladi (on-call). Bu Dev/Ops devorini buzadi."},
+  {t:"Zamonaviy modellar", q:"SAFe (Scaled Agile Framework) qaysi muammoni hal qiladi?",
+   o:["Kichik jamoadagi kod sifatini","Agile'ni yirik korxona (500+ kishi) miqyosida ko'lashtirishni","Faqat testlash avtomatlashtirishni","Ma'lumotlar bazasi dizaynini"],
+   c:1, e:"SAFe Agile'ni korporativ miqyosda (500+ kishi, ko'p bog'liq jamoa) ko'lashtiradi — ART, PI Planning, portfel muvofiqligi orqali."},
+  {t:"Zamonaviy modellar", q:"Spiral model nimaga asoslangan?",
+   o:["Tezlikka","Riskka (risk-driven)","Hujjatga","Foydalanuvchi interfeysiga"],
+   c:1, e:"Spiral model (Boehm) riskka asoslangan: har aylanish markazida risk tahlili turadi. Yuqori riskli, davlat/mudofaa loyihalari uchun."},
+  {t:"Zamonaviy modellar", q:"Spiral modelda eng katta risklar qachon bartaraf etiladi?",
+   o:["Loyiha oxirida","Eng arzon — boshlang'ich iteratsiyalarda","Faqat testlashda","Maintenance bosqichida"],
+   c:1, e:"Spiral eng katta noaniqliklarni eng arzon (boshlang'ich) bosqichlarda prototip orqali bartaraf etadi. Kerak bo'lsa loyihani erta to'xtatadi."},
+  {t:"Zamonaviy modellar", q:"Blue-Green deployment ning asosiy afzalligi nima?",
+   o:["Eng arzon variant","Nol uzilish (zero downtime) va bir zumda orqaga qaytarish","Test umuman kerak emas","Faqat kichik loyihalar uchun"],
+   c:1, e:"Blue-Green ikkita bir xil muhit tutadi; trafik bir zumda yangisiga o'tadi, muammo bo'lsa darhol qaytariladi — nol uzilish."},
+  {t:"Zamonaviy modellar", q:"DevOps hayotiy siklida Monitor bosqichidan keyin nima keladi?",
+   o:["Loyiha tugaydi","Qayta Plan'ga qaytadi (uzluksiz qayta aloqa halqasi)","Faqat Deploy","Hech narsa"],
+   c:1, e:"DevOps «infinity loop»da Monitor qayta Plan'ga qaytadi — uzluksiz qayta aloqa va yaxshilanish halqasi hosil bo'ladi."},
+
+  // ---------- E: Synthesis ----------
+  {t:"Umumiy", q:"Ketma-ket (Waterfall) va iterativ modellar o'rtasidagi asosiy farq nima?",
+   o:["Iterativda kod yozilmaydi","Ketma-ketda bosqichlar bir marta qat'iy tartibda; iterativda takroriy sikllar va erta qayta aloqa","Ikkalasi bir xil","Iterativ faqat katta loyihalar uchun"],
+   c:1, e:"Ketma-ket: bosqichlar bir marta, mahsulot oxirida. Iterativ: kichik bo'laklarda takror, tez qayta aloqa, erta risk aniqlash."},
+  {t:"Umumiy", q:"SDLC modelini tanlashda BIRINCHI navbatda nimaga qaraladi?",
+   o:["Dasturchining sevimli tili","Talablarning aniqligi/barqarorligi va loyiha konteksti","Ofis joylashuvi","Logotip rangi"],
+   c:1, e:"Model hajmga emas, kontekstga (talablar aniqligi, kritiklik, jamoa hajmi, risk) qarab tanlanadi. Universal model yo'q."},
+  {t:"Umumiy", q:"Dijkstra'ning «Testing shows the presence, not the absence of bugs» iborasi nimani anglatadi?",
+   o:["Test umuman kerak emas","Test o'tdi degani xato yo'q degani emas — test faqat mavjud xatolarni topadi","Test barcha xatolarni topadi","Faqat avtomatik test ishonchli"],
+   c:1, e:"Test mavjud xatolarni ko'rsatadi, lekin xato YO'QLIGINI isbotlamaydi. Test o'tishi — xato yo'q degani emas."},
+  {t:"Umumiy", q:"Yakka dasturchi qisqa muddatli loyiha uchun qaysi model eng mos?",
+   o:["SAFe","Waterfall (to'liq rasmiy)","Kanban (yengil, WIP limit bilan)","V-Model"],
+   c:2, e:"Yakka dasturchi va qisqa muddatda Kanban mos: rol/sprint talab qilmaydi, WIP limit diqqatni jamlaydi. SAFe yirik korxona uchun."},
+];
+
+// ---- shuffle ----
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const deck = shuffle(QUESTIONS.map(q=>{
+  const opts = q.o.map((text,idx)=>({text, correct: idx===q.c}));
+  shuffle(opts);
+  return {...q, opts};
+}));
+
+let idx=0, score=0, answered=false;
+const history=[];
+const KEYS=["A","B","C","D"];
+
+const elQ=document.getElementById('question'), elOpts=document.getElementById('opts'),
+      elTopic=document.getElementById('topic'), elExplain=document.getElementById('explain'),
+      elVerdict=document.getElementById('verdict'), elNext=document.getElementById('nextBtn'),
+      elBar=document.getElementById('bar'), elCounter=document.getElementById('counter'),
+      elLive=document.getElementById('liveScore');
+
+function render(){
+  answered=false;
+  const item=deck[idx];
+  elTopic.textContent=item.t;
+  elQ.textContent=item.q;
+  elExplain.className='explain'; elExplain.innerHTML='';
+  elVerdict.textContent=''; elVerdict.className='verdict';
+  elNext.disabled=true;
+  elNext.textContent = idx===deck.length-1 ? 'Natijani ko’rish ✓' : 'Keyingi →';
+  elCounter.textContent=`Savol ${idx+1} / ${deck.length}`;
+  elLive.textContent=`Ball: ${score}`;
+  elBar.style.width=`${(idx)/deck.length*100}%`;
+  elOpts.innerHTML='';
+  item.opts.forEach((op,i)=>{
+    const d=document.createElement('div');
+    d.className='opt';
+    d.innerHTML=`<span class="k">${KEYS[i]}</span><span>${op.text}</span>`;
+    d.onclick=()=>choose(d,op,item);
+    elOpts.appendChild(d);
+  });
+}
+
+function choose(node, op, item){
+  if(answered) return;
+  answered=true;
+  const all=[...elOpts.children];
+  all.forEach(n=>n.classList.add('disabled'));
+  if(op.correct){
+    node.classList.add('correct');
+    score++;
+    elVerdict.textContent='✓ To’g’ri!';
+    elVerdict.classList.add('ok');
+  }else{
+    node.classList.add('wrong');
+    elVerdict.textContent='✗ Noto’g’ri';
+    elVerdict.classList.add('bad');
+    // to'g'risini yoritish
+    all.forEach((n,i)=>{ if(item.opts[i].correct) n.classList.add('correct'); });
+  }
+  history.push({q:item.q, ok:op.correct, correctText:item.opts.find(o=>o.correct).text});
+  elExplain.innerHTML=`<b>Izoh:</b> ${item.e}`;
+  elExplain.classList.add('show');
+  elLive.textContent=`Ball: ${score}`;
+  elNext.disabled=false;
+}
+
+elNext.onclick=()=>{
+  if(idx<deck.length-1){ idx++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else showResult();
+};
+
+function showResult(){
+  document.getElementById('quiz').classList.add('hidden');
+  const pct=Math.round(score/deck.length*100);
+  let emoji,msg;
+  if(pct>=90){emoji='🏆';msg='Ajoyib! Mavzuni mukammal egallabsiz.';}
+  else if(pct>=70){emoji='🎉';msg='Yaxshi natija! Yana bir oz mustahkamlasangiz a’lo bo’ladi.';}
+  else if(pct>=50){emoji='💪';msg='O’rtacha. Xato qilgan savollarni qayta ko’rib chiqing.';}
+  else {emoji='📚';msg='Ma’ruzalarni va savol-javob hujjatini qayta o’qib, qaytadan urinib ko’ring.';}
+  const rev=history.map((h,i)=>`<div class="ritem ${h.ok?'r-ok':'r-bad'}">
+      <span class="ic">${h.ok?'✓':'✗'}</span>${i+1}. ${h.q}
+      ${h.ok?'':`<small>To’g’ri javob: ${h.correctText}</small>`}</div>`).join('');
+  const rs=document.getElementById('resultScreen');
+  rs.classList.remove('hidden');
+  rs.innerHTML=`
+    <div class="emoji">${emoji}</div>
+    <div class="score">${pct}%</div>
+    <div class="scoreLbl">${score} / ${deck.length} to’g’ri javob</div>
+    <div class="msg">${msg}</div>
+    <button class="next" style="margin:14px auto 0;display:inline-block" onclick="location.reload()">↻ Qaytadan boshlash</button>
+    <div class="review">
+      <h3>Savollar tahlili</h3>
+      ${rev}
+    </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+render();
+</script>
+</body>
+</html>

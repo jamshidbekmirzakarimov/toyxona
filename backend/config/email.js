@@ -34,20 +34,26 @@ async function verifyEmailConfig() {
 async function sendOtpEmail(to, code) {
   const from = process.env.EMAIL_FROM || process.env.EMAIL_USER;
 
-  await transporter.sendMail({
-    from,
-    to,
-    subject: "To'yxona — Tasdiqlash kodi (OTP)",
-    text: `Sizning tasdiqlash kodingiz: ${code}\nKod 5 daqiqa davomida amal qiladi.`,
-    html: `
-      <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
-        <h2>To'yxona Bron Tizimi</h2>
-        <p>Hurmatli foydalanuvchi, akkauntingizni tasdiqlash uchun quyidagi kodni kiriting:</p>
-        <p style="font-size: 28px; font-weight: bold; letter-spacing: 6px; color: #2c3e50;">${code}</p>
-        <p style="color: #888;">Kod <b>5 daqiqa</b> davomida amal qiladi. Agar bu so'rovni siz yubormagan bo'lsangiz, ushbu xabarga e'tibor bermang.</p>
-      </div>
-    `,
-  });
+  try {
+    await transporter.sendMail({
+      from,
+      to,
+      subject: "To'yxona — Tasdiqlash kodi (OTP)",
+      text: `Sizning tasdiqlash kodingiz: ${code}\nKod 5 daqiqa davomida amal qiladi.`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: auto;">
+          <h2>To'yxona Bron Tizimi</h2>
+          <p>Hurmatli foydalanuvchi, akkauntingizni tasdiqlash uchun quyidagi kodni kiriting:</p>
+          <p style="font-size: 28px; font-weight: bold; letter-spacing: 6px; color: #2c3e50;">${code}</p>
+          <p style="color: #888;">Kod <b>5 daqiqa</b> davomida amal qiladi. Agar bu so'rovni siz yubormagan bo'lsangiz, ushbu xabarga e'tibor bermang.</p>
+        </div>
+      `,
+    });
+  } catch (err) {
+    // Render loglarida ASL xatoni ko'rsatish uchun (EAUTH, ETIMEDOUT, ESOCKET, ...)
+    console.error('❌ Email yuborib bo\'lmadi:', err.code || '', '-', err.message);
+    throw err;
+  }
 }
 
 module.exports = { transporter, verifyEmailConfig, sendOtpEmail };
