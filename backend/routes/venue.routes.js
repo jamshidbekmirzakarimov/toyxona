@@ -39,11 +39,8 @@ router.post(
   '/',
   protect,
   authorize('admin', 'owner'),
-  upload.fields([
-    { name: 'images', maxCount: 10 }, // to'yxona suratlari
-    { name: 'singerImages', maxCount: 20 }, // honanda suratlari (singers tartibida)
-    { name: 'carImages', maxCount: 20 }, // mashina suratlari (cars tartibida)
-  ]),
+  // images (galereya), singerImage_<i>, carImage_<i> — istalgan fayl maydonlari
+  upload.any(),
   createVenue
 );
 

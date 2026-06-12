@@ -20,7 +20,15 @@ export function buildVenueFormData({ form, singers, cars, menu, karnay, images }
   fd.append('cars', JSON.stringify(cars.map((c) => ({ brand: c.brand, price: Number(c.price) }))));
   fd.append('menu_items', JSON.stringify(menu.map((m) => m.name)));
   fd.append('karnay_surnay', JSON.stringify(karnayPayload(karnay)));
+  // To'yxona galereyasi
   images.forEach((f) => fd.append('images', f));
+  // Har bir honanda/mashina rasmi — aniq indeks bilan (singerImage_0, carImage_1, ...)
+  singers.forEach((s, i) => {
+    if (s.imageFile) fd.append(`singerImage_${i}`, s.imageFile);
+  });
+  cars.forEach((c, i) => {
+    if (c.imageFile) fd.append(`carImage_${i}`, c.imageFile);
+  });
   return fd;
 }
 

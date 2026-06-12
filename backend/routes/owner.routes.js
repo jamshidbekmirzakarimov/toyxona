@@ -21,15 +21,7 @@ router.use(protect, authorize('owner'));
 // O'z to'yxonasini ro'yxatdan o'tkazish (createVenue owner uchun
 // status='tasdiqlanmagan' va owner_id=req.user.userId qo'yadi).
 // multipart/form-data — rasmlar bilan.
-router.post(
-  '/venues',
-  upload.fields([
-    { name: 'images', maxCount: 10 },
-    { name: 'singerImages', maxCount: 20 },
-    { name: 'carImages', maxCount: 20 },
-  ]),
-  createVenue
-);
+router.post('/venues', upload.any(), createVenue);
 
 // O'z to'yxonalari ro'yxati (statuslar bilan)
 router.get('/venues', getOwnerVenues);

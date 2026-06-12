@@ -71,6 +71,17 @@ export default function VenueForm({ isEdit, initial, submitting, submitLabel, on
   const updMenu = (i, val) => setMenu(menu.map((m, idx) => (idx === i ? { name: val } : m)));
   const rmMenu = (i) => setMenu(menu.filter((_, idx) => idx !== i));
 
+  // --- Rasm boshqaruvi (create rejimi) ---
+  const onAddImages = (e) => {
+    const picked = Array.from(e.target.files || []);
+    if (picked.length) setImages((prev) => [...prev, ...picked]);
+    e.target.value = ''; // bir xil faylni qayta tanlash mumkin bo'lsin
+    setErrors((er) => ({ ...er, images: undefined }));
+  };
+  const removeImage = (i) => setImages((prev) => prev.filter((_, idx) => idx !== i));
+  const setSingerImage = (i, file) => setSingers(singers.map((s, idx) => (idx === i ? { ...s, imageFile: file } : s)));
+  const setCarImage = (i, file) => setCars(cars.map((c, idx) => (idx === i ? { ...c, imageFile: file } : c)));
+
   const validate = () => {
     const e = {};
     if (!isNonEmpty(form.name)) e.name = 'Nom majburiy';
@@ -178,16 +189,21 @@ export default function VenueForm({ isEdit, initial, submitting, submitLabel, on
           </>
         ) : (
           <>
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={(e) => {
-                setImages([...e.target.files]);
-                setErrors((er) => ({ ...er, images: undefined }));
-              }}
-            />
-            <p className="file-hint">{images.length > 0 ? `${images.length} ta fayl tanlandi` : 'Bir nechta rasm tanlashingiz mumkin'}</p>
+            <div className="img-grid">
+              {images.map((file, i) => (
+                <div className="img-thumb" key={i}>
+                  <img src={URL.createObjectURL(file)} alt={`surat ${i + 1}`} />
+                  <button type="button" className="img-x" onClick={() => removeImage(i)} title="O'chirish">×</button>
+                </div>
+              ))}
+              <label className="img-add" title="Rasm qo'shish">
+                <span>＋</span>
+                <input type="file" accept="image/*" multiple hidden onChange={onAddImages} />
+              </label>
+            </div>
+            <p className="file-hint">
+              {images.length > 0 ? `${images.length} ta surat tanlandi` : 'Rasm qo\'shish uchun ＋ tugmasini bosing'}
+            </p>
             {errors.images && <span className="field-error">{errors.images}</span>}
           </>
         )}
@@ -200,6 +216,14 @@ export default function VenueForm({ isEdit, initial, submitting, submitLabel, on
           <div className="array-row" key={i}>
             <input placeholder="Nomi" value={s.name} onChange={(e) => updSinger(i, 'name', e.target.value)} className={errors[`singer_${i}_n`] ? 'input-error' : ''} />
             <input className={`price-input ${errors[`singer_${i}_p`] ? 'input-error' : ''}`} type="number" min="0" placeholder="Narx" value={s.price} onChange={(e) => updSinger(i, 'price', e.target.value)} />
+            {isEdit
+              ? s.image_url && <img className="row-thumb" src={imageUrl(s.image_url)} alt="" />
+              : (
+                <label className={`img-pick ${s.imageFile ? 'has' : ''}`} title="Rasm tanlash">
+                  {s.imageFile ? '✓' : '🖼'}
+                  <input type="file" accept="image/*" hidden onChange={(e) => setSingerImage(i, e.target.files[0])} />
+                </label>
+              )}
             <button type="button" className="row-remove" onClick={() => rmSinger(i)}>×</button>
           </div>
         ))}
@@ -213,6 +237,14 @@ export default function VenueForm({ isEdit, initial, submitting, submitLabel, on
           <div className="array-row" key={i}>
             <input placeholder="Marka" value={c.brand} onChange={(e) => updCar(i, 'brand', e.target.value)} className={errors[`car_${i}_n`] ? 'input-error' : ''} />
             <input className={`price-input ${errors[`car_${i}_p`] ? 'input-error' : ''}`} type="number" min="0" placeholder="Narx" value={c.price} onChange={(e) => updCar(i, 'price', e.target.value)} />
+            {isEdit
+              ? c.image_url && <img className="row-thumb" src={imageUrl(c.image_url)} alt="" />
+              : (
+                <label className={`img-pick ${c.imageFile ? 'has' : ''}`} title="Rasm tanlash">
+                  {c.imageFile ? '✓' : '🖼'}
+                  <input type="file" accept="image/*" hidden onChange={(e) => setCarImage(i, e.target.files[0])} />
+                </label>
+              )}
             <button type="button" className="row-remove" onClick={() => rmCar(i)}>×</button>
           </div>
         ))}

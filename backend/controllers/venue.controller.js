@@ -17,9 +17,9 @@ const isNonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
 // Stringni songa aylantirish (bo'sh/null -> NaN)
 const toNum = (v) => (v === '' || v === null || v === undefined ? NaN : Number(v));
 
-// req.files (object) ichidagi barcha fayllarning disk yo'llari (tozalash uchun)
+// req.files (upload.any() -> massiv) ichidagi barcha disk yo'llari (tozalash uchun)
 const collectUploadedPaths = (files) =>
-  files ? Object.values(files).flat().map((f) => f.path) : [];
+  (Array.isArray(files) ? files : []).map((f) => f.path);
 
 // Xatoda yuklangan fayllarni o'chirish (orphan fayl qolmasligi uchun)
 const cleanupFiles = async (paths) => {
@@ -124,7 +124,7 @@ const validateVenue = (d) => {
 //  JSON-string maydonlar (form-data): singers, cars, menu_items, karnay_surnay
 // ---------------------------------------------------------------------------
 const createVenue = asyncHandler(async (req, res) => {
-  const files = req.files || {};
+  const files = Array.isArray(req.files) ? req.files : [];
   const uploadedPaths = collectUploadedPaths(files);
 
   try {
@@ -140,30 +140,20 @@ const createVenue = asyncHandler(async (req, res) => {
     // --- Validatsiya ---
     validateVenue({ name, district, address, phone, capacity, price_per_seat, singers, cars, menu_items, karnay_surnay });
 
-    // --- Rasmlar (index bo'yicha bog'lanadi) ---
-    const venueImages = (files.images || []).map(toUrl);
-    const singerImages = files.singerImages || [];
-    const carImages = files.carImages || [];
+    // --- Rasmlar ---
+    // 'images' -> to'yxona galereyasi; 'singerImage_<i>' / 'carImage_<i>' -> aniq element
+    const venueImages = files.filter((f) => f.fieldname === 'images').map(toUrl);
+    const findFile = (fieldname) => files.find((f) => f.fieldname === fieldname);
 
-    // Rasm soni element sonidan ko'p bo'lib ketmasligini tekshiramiz (orphan oldini olish)
-    if (singerImages.length > singers.length) {
-      throw new ApiError(400, 'singerImages soni singers sonidan ko\'p');
-    }
-    if (carImages.length > cars.length) {
-      throw new ApiError(400, 'carImages soni cars sonidan ko\'p');
-    }
+    const singersData = singers.map((s, i) => {
+      const img = findFile(`singerImage_${i}`);
+      return { name: s.name.trim(), price: Number(s.price), image_url: img ? toUrl(img) : null };
+    });
 
-    const singersData = singers.map((s, i) => ({
-      name: s.name.trim(),
-      price: Number(s.price),
-      image_url: singerImages[i] ? toUrl(singerImages[i]) : null,
-    }));
-
-    const carsData = cars.map((c, i) => ({
-      brand: c.brand.trim(),
-      price: Number(c.price),
-      image_url: carImages[i] ? toUrl(carImages[i]) : null,
-    }));
+    const carsData = cars.map((c, i) => {
+      const img = findFile(`carImage_${i}`);
+      return { brand: c.brand.trim(), price: Number(c.price), image_url: img ? toUrl(img) : null };
+    });
 
     const menuData = menu_items.map((m) => String(m).trim());
 

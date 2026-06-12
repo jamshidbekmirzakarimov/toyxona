@@ -876,6 +876,95 @@ h1 {
   margin: 0.35rem 0 0;
 }
 
+/* --- Rasm tanlash (galereya: ＋ bilan qo'shish) --- */
+.img-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.img-thumb {
+  position: relative;
+  width: 96px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.img-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-x {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-add {
+  width: 96px;
+  height: 72px;
+  border: 2px dashed var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 1.7rem;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.img-add:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+/* --- Honanda/mashina qatori uchun rasm tugmasi --- */
+.img-pick {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  background: var(--surface);
+}
+
+.img-pick.has {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.row-thumb {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
 /* --- Admin sub-navigatsiya (tablar) --- */
 .subnav {
   display: flex;
