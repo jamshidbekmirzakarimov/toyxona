@@ -10,6 +10,7 @@ const {
   updateOwnVenue,
   getOwnerBookings,
   cancelOwnerBooking,
+  getOwnerStats,
 } = require('../controllers/owner.controller');
 
 // ---------------------------------------------------------------------------
@@ -17,6 +18,9 @@ const {
 //  (router.use orqali bir joyda qo'llaymiz)
 // ---------------------------------------------------------------------------
 router.use(protect, authorize('owner'));
+
+// O'z statistikasi
+router.get('/stats', getOwnerStats);
 
 // O'z to'yxonasini ro'yxatdan o'tkazish (createVenue owner uchun
 // status='tasdiqlanmagan' va owner_id=req.user.userId qo'yadi).

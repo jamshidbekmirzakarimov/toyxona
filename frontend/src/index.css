@@ -965,6 +965,44 @@ h1 {
   border: 1px solid var(--border);
 }
 
+/* --- Statistika kartochkalari --- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.stat-hint {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+
 /* --- Admin sub-navigatsiya (tablar) --- */
 .subnav {
   display: flex;

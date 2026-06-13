@@ -186,6 +186,8 @@ export default function VenueDetailPage() {
                   </div>
                   <div><span className="muted">Telefon:</span> {bookedBooking.customer_phone}</div>
                   <div><span className="muted">Odam soni:</span> {bookedBooking.guest_count}</div>
+                  <div><span className="muted">Summa:</span> {fmt(bookedBooking.total_price)} so'm</div>
+                  <div><span className="muted">Avans:</span> {fmt(bookedBooking.advance_paid)} so'm</div>
                 </div>
               ) : (
                 <p className="muted" style={{ margin: 0 }}>Bu kun band.</p>

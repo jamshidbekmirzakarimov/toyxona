@@ -2,6 +2,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const VenueModel = require('../models/venue.model');
 const BookingModel = require('../models/booking.model');
+const StatsModel = require('../models/stats.model');
 const { validateVenue } = require('./venue.controller');
 
 // ---------------------------------------------------------------------------
@@ -115,4 +116,12 @@ const cancelOwnerBooking = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Bron bekor qilindi', booking: cancelled });
 });
 
-module.exports = { getOwnerVenues, updateOwnVenue, getOwnerBookings, cancelOwnerBooking };
+// ---------------------------------------------------------------------------
+//  GET /api/owner/stats — owner statistikasi
+// ---------------------------------------------------------------------------
+const getOwnerStats = asyncHandler(async (req, res) => {
+  const stats = await StatsModel.ownerStats(req.user.userId);
+  res.json({ success: true, stats });
+});
+
+module.exports = { getOwnerVenues, updateOwnVenue, getOwnerBookings, cancelOwnerBooking, getOwnerStats };

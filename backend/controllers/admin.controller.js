@@ -7,6 +7,7 @@ const ApiError = require('../utils/ApiError');
 const UserModel = require('../models/user.model');
 const VenueModel = require('../models/venue.model');
 const BookingModel = require('../models/booking.model');
+const StatsModel = require('../models/stats.model');
 const { validateVenue } = require('./venue.controller');
 
 // uploads/ papkasi (fayllarni o'chirish uchun)
@@ -253,6 +254,14 @@ const cancelAnyBooking = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Bron bekor qilindi', booking: cancelled });
 });
 
+// ---------------------------------------------------------------------------
+//  GET /api/admin/stats — tizim statistikasi
+// ---------------------------------------------------------------------------
+const getStats = asyncHandler(async (req, res) => {
+  const stats = await StatsModel.adminStats();
+  res.json({ success: true, stats });
+});
+
 module.exports = {
   createOwner,
   listOwners,
@@ -262,4 +271,5 @@ module.exports = {
   editVenue,
   listAllBookings,
   cancelAnyBooking,
+  getStats,
 };

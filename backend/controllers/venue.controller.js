@@ -1,30 +1,17 @@
-const fs = require('fs').promises;
-
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const VenueModel = require('../models/venue.model');
+const { saveImage } = require('../config/imageStorage');
 
 // ---------------------------------------------------------------------------
 //  Yordamchi funksiyalar
 // ---------------------------------------------------------------------------
-
-// Saqlangan fayldan URL (statik /uploads orqali ochiladi)
-const toUrl = (file) => `/uploads/${file.filename}`;
 
 // Bo'sh bo'lmagan string
 const isNonEmpty = (v) => typeof v === 'string' && v.trim().length > 0;
 
 // Stringni songa aylantirish (bo'sh/null -> NaN)
 const toNum = (v) => (v === '' || v === null || v === undefined ? NaN : Number(v));
-
-// req.files (upload.any() -> massiv) ichidagi barcha disk yo'llari (tozalash uchun)
-const collectUploadedPaths = (files) =>
-  (Array.isArray(files) ? files : []).map((f) => f.path);
-
-// Xatoda yuklangan fayllarni o'chirish (orphan fayl qolmasligi uchun)
-const cleanupFiles = async (paths) => {
-  await Promise.all(paths.map((p) => fs.unlink(p).catch(() => {})));
-};
 
 // multipart/form-data ichidagi JSON string maydonni xavfsiz parse qilish
 const parseJsonField = (value, fieldName, fallback) => {
@@ -125,72 +112,80 @@ const validateVenue = (d) => {
 // ---------------------------------------------------------------------------
 const createVenue = asyncHandler(async (req, res) => {
   const files = Array.isArray(req.files) ? req.files : [];
-  const uploadedPaths = collectUploadedPaths(files);
 
-  try {
-    // --- Matn maydonlari ---
-    const { name, district, address, phone, description, capacity, price_per_seat } = req.body;
+  // --- Matn maydonlari ---
+  const { name, district, address, phone, description, capacity, price_per_seat } = req.body;
 
-    // --- JSON massivlar ---
-    const singers = parseJsonField(req.body.singers, 'singers', []);
-    const cars = parseJsonField(req.body.cars, 'cars', []);
-    const menu_items = parseJsonField(req.body.menu_items, 'menu_items', []);
-    const karnay_surnay = parseJsonField(req.body.karnay_surnay, 'karnay_surnay', null);
+  // --- JSON massivlar ---
+  const singers = parseJsonField(req.body.singers, 'singers', []);
+  const cars = parseJsonField(req.body.cars, 'cars', []);
+  const menu_items = parseJsonField(req.body.menu_items, 'menu_items', []);
+  const karnay_surnay = parseJsonField(req.body.karnay_surnay, 'karnay_surnay', null);
 
-    // --- Validatsiya ---
-    validateVenue({ name, district, address, phone, capacity, price_per_seat, singers, cars, menu_items, karnay_surnay });
+  // --- Validatsiya (rasm yuklashdan OLDIN — bekorga yuklamaslik uchun) ---
+  validateVenue({ name, district, address, phone, capacity, price_per_seat, singers, cars, menu_items, karnay_surnay });
 
-    // --- Rasmlar ---
-    // 'images' -> to'yxona galereyasi; 'singerImage_<i>' / 'carImage_<i>' -> aniq element
-    const venueImages = files.filter((f) => f.fieldname === 'images').map(toUrl);
-    const findFile = (fieldname) => files.find((f) => f.fieldname === fieldname);
+  // --- Rasmlarni saqlash (Cloudinary yoki lokal disk) ---
+  // 'images' -> galereya; 'singerImage_<i>' / 'carImage_<i>' -> aniq element
+  const findFile = (fieldname) => files.find((f) => f.fieldname === fieldname);
 
-    const singersData = singers.map((s, i) => {
+  const venueImages = await Promise.all(
+    files.filter((f) => f.fieldname === 'images').map((f) => saveImage(f))
+  );
+
+  const singersData = await Promise.all(
+    singers.map(async (s, i) => {
       const img = findFile(`singerImage_${i}`);
-      return { name: s.name.trim(), price: Number(s.price), image_url: img ? toUrl(img) : null };
-    });
+      return {
+        name: s.name.trim(),
+        price: Number(s.price),
+        image_url: img ? await saveImage(img) : null,
+      };
+    })
+  );
 
-    const carsData = cars.map((c, i) => {
+  const carsData = await Promise.all(
+    cars.map(async (c, i) => {
       const img = findFile(`carImage_${i}`);
-      return { brand: c.brand.trim(), price: Number(c.price), image_url: img ? toUrl(img) : null };
-    });
+      return {
+        brand: c.brand.trim(),
+        price: Number(c.price),
+        image_url: img ? await saveImage(img) : null,
+      };
+    })
+  );
 
-    const menuData = menu_items.map((m) => String(m).trim());
+  const menuData = menu_items.map((m) => String(m).trim());
 
-    // --- Status va owner (roldan kelib chiqib) ---
-    const status = req.user.role === 'admin' ? 'tasdiqlangan' : 'tasdiqlanmagan';
-    const owner_id = req.user.userId;
+  // --- Status va owner (roldan kelib chiqib) ---
+  const status = req.user.role === 'admin' ? 'tasdiqlangan' : 'tasdiqlanmagan';
+  const owner_id = req.user.userId;
 
-    // --- Transaction bilan yozish ---
-    const venue = await VenueModel.createWithRelations({
-      name: name.trim(),
-      district: district.trim(),
-      address: address.trim(),
-      capacity: Number(capacity),
-      price_per_seat: Number(price_per_seat),
-      phone: phone.trim(),
-      description: isNonEmpty(description) ? description.trim() : null,
-      status,
-      owner_id,
-      images: venueImages,
-      singers: singersData,
-      cars: carsData,
-      menu_items: menuData,
-      karnay_surnay: karnay_surnay
-        ? { available: Boolean(karnay_surnay.available), price: Number(karnay_surnay.price) || 0 }
-        : null,
-    });
+  // --- Transaction bilan yozish ---
+  const venue = await VenueModel.createWithRelations({
+    name: name.trim(),
+    district: district.trim(),
+    address: address.trim(),
+    capacity: Number(capacity),
+    price_per_seat: Number(price_per_seat),
+    phone: phone.trim(),
+    description: isNonEmpty(description) ? description.trim() : null,
+    status,
+    owner_id,
+    images: venueImages,
+    singers: singersData,
+    cars: carsData,
+    menu_items: menuData,
+    karnay_surnay: karnay_surnay
+      ? { available: Boolean(karnay_surnay.available), price: Number(karnay_surnay.price) || 0 }
+      : null,
+  });
 
-    res.status(201).json({
-      success: true,
-      message: 'To\'yxona muvaffaqiyatli qo\'shildi',
-      venue,
-    });
-  } catch (err) {
-    // Har qanday xatoda (validatsiya yoki DB) yuklangan fayllarni o'chiramiz
-    await cleanupFiles(uploadedPaths);
-    throw err; // global error handler'ga uzatiladi
-  }
+  res.status(201).json({
+    success: true,
+    message: 'To\'yxona muvaffaqiyatli qo\'shildi',
+    venue,
+  });
 });
 
 // ---------------------------------------------------------------------------

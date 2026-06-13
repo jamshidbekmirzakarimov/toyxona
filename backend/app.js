@@ -15,8 +15,14 @@ const app = express();
 // ---------------------------------------------------------------------------
 
 // Xavfsizlik header'lari (X-Frame-Options, X-Content-Type-Options va h.k.).
-// X-Powered-By header'ini ham o'chiradi (server texnologiyasini yashiradi).
-app.use(helmet());
+// X-Powered-By'ni ham o'chiradi.
+// crossOriginResourcePolicy: 'cross-origin' -> /uploads rasmlari frontend
+// (boshqa origin) tomonidan yuklanishi mumkin bo'lsin (aks holda brauzer bloklaydi).
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  })
+);
 
 // CORS — bir nechta origin'ga ruxsat (lokal dev + deploy qilingan frontend).
 // Qo'shimcha origin'larni CLIENT_URL env orqali (vergul bilan ajratib) qo'shish mumkin.

@@ -5,6 +5,7 @@ import { toast } from '../../store/toastStore';
 import AdminNav from '../../components/AdminNav';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import Spinner from '../../components/Spinner';
+import StatCard from '../../components/StatCard';
 import { TASHKENT_DISTRICTS } from '../../utils/districts';
 
 const fmt = (n) => Number(n || 0).toLocaleString('uz-UZ');
@@ -20,6 +21,7 @@ function VenueStatus({ status }) {
 export default function AdminVenuesPage() {
   const [venues, setVenues] = useState([]);
   const [owners, setOwners] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -56,9 +58,10 @@ export default function AdminVenuesPage() {
     fetchVenues();
   }, [fetchVenues]);
 
-  // Egalar (biriktirish dropdown'i uchun) — bir marta
+  // Egalar (biriktirish dropdown'i uchun) + statistika — bir marta
   useEffect(() => {
     api.get('/admin/owners').then((res) => setOwners(res.data.owners || [])).catch(() => {});
+    api.get('/admin/stats').then((res) => setStats(res.data.stats)).catch(() => {});
   }, []);
 
   // --- Tasdiqlash ---
@@ -122,6 +125,29 @@ export default function AdminVenuesPage() {
         <h1>To'yxonalar</h1>
         <Link to="/admin/venues/new" className="btn btn-primary btn-sm">+ Yangi to'yxona</Link>
       </div>
+
+      {stats && (
+        <div className="stats-grid">
+          <StatCard
+            label="To'yxonalar"
+            value={stats.venues_total}
+            hint={`${stats.venues_approved} tasdiqlangan · ${stats.venues_pending} kutilmoqda`}
+          />
+          <StatCard label="Egalar" value={stats.owners_total} accent="#16a34a" />
+          <StatCard
+            label="Aktiv bronlar"
+            value={stats.bookings_active}
+            hint={`Jami: ${stats.bookings_total}`}
+            accent="#0ea5e9"
+          />
+          <StatCard
+            label="Kutilayotgan summa"
+            value={`${fmt(stats.revenue_active)} so'm`}
+            hint={`Avans: ${fmt(stats.advance_active)} so'm`}
+            accent="#d97706"
+          />
+        </div>
+      )}
 
       {/* Filtr / sort */}
       <div className="filters">

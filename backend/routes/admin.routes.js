@@ -14,12 +14,16 @@ const {
   editVenue,
   listAllBookings,
   cancelAnyBooking,
+  getStats,
 } = require('../controllers/admin.controller');
 
 // ---------------------------------------------------------------------------
 //  Barcha /api/admin route'lari: protect + authorize('admin')
 // ---------------------------------------------------------------------------
 router.use(protect, authorize('admin'));
+
+// --- Statistika ---
+router.get('/stats', getStats);
 
 // --- Egalar (owners) ---
 router.post('/owners', createOwnerRules, validate, createOwner); // yangi to'yxona egasi yaratish

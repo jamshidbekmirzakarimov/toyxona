@@ -1,26 +1,14 @@
 const multer = require('multer');
-const path = require('path');
 const ApiError = require('../utils/ApiError');
 
-// uploads/ papkasining absolyut yo'li
-const UPLOAD_DIR = path.join(__dirname, '..', 'uploads');
+// ---------------------------------------------------------------------------
+//  memoryStorage — fayllar BUFFER sifatida (diskka emas).
+//  Keyin config/imageStorage.js saveImage() ularni Cloudinary (production)
+//  yoki lokal diskka (dev) yozadi.
+// ---------------------------------------------------------------------------
+const storage = multer.memoryStorage();
 
-// ---------------------------------------------------------------------------
-//  Disk storage — fayllar uploads/ ga noyob nom bilan saqlanadi.
-//  Nom: <maydon>-<vaqt>-<tasodif>.<kengaytma>  (to'qnashuvlarni oldini oladi)
-// ---------------------------------------------------------------------------
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const unique = `${file.fieldname}-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
-    cb(null, unique);
-  },
-});
-
-// ---------------------------------------------------------------------------
-//  fileFilter — faqat rasm fayllarini qabul qiladi
-// ---------------------------------------------------------------------------
+// Faqat rasm fayllariga ruxsat
 const ALLOWED_MIME = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
 
 const fileFilter = (req, file, cb) => {
@@ -31,13 +19,10 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// ---------------------------------------------------------------------------
-//  Multer instance — har bir fayl uchun maks 5MB
-// ---------------------------------------------------------------------------
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // har bir fayl maks 5MB
 });
 
 module.exports = upload;
